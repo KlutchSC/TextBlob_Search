@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TextBlob_Search
 {
     class SearchRoutines
     {
         // Lists for the string we are searching for within the document
-        private static readonly List<string> SubSearchCharList = new List<string>();
         private static readonly List<string> SubSearchWordList = new List<string>();
-
-        // Lists for the document so that we can compare with the string to search
-        private static readonly List<string> SubCompareCharList = new List<string>(); 
         private static readonly List<string> SubCompareWordList = new List<string>();
 
-        // List containing sections (paragraphs) of our original document to be 
-        private static List<string> _documentParts = new List<string>();
-
-        // Dictionary so that we can store the percentage value of how close the section resembles the search string
+        // Dictionary so that we can store the index of the section checked and the percentage value that it resembles the search string
         public Dictionary<int, int> ResultDictionary = new Dictionary<int, int>();
-
-        // Values for char/word difference after String.Split
-        public int DifferenceInCharCount;
-        public int DifferenceInWordCount;
 
         /// <summary>
         /// Default Constructor
@@ -30,12 +20,18 @@ namespace TextBlob_Search
         /// <param name="documentToSearch">String document that will be searched over</param>
         public SearchRoutines(string stringToSearchFor, string documentToSearch)
         {
-            _documentParts = ParseDocument(documentToSearch);
+            var documentParts = ParseDocument(documentToSearch);
 
-            foreach (var section in _documentParts)
+            foreach (var section in documentParts)
             {
-                DifferenceInCharCount = SplitStrings_Char(stringToSearchFor, section);
-                DifferenceInWordCount = SplitStrings_Word(stringToSearchFor, section);
+                // first find the difference in word count between the section of the document and string to search for
+                var DifferenceInWordCount = SplitStrings(stringToSearchFor, section);
+
+                // determine the match percentage
+                var PercentageMatch = CompareStringsForMatch();
+
+                // finally add the result to our ResultDictionary
+                ResultDictionary.Add(DifferenceInWordCount, PercentageMatch);
             }
         }
 
@@ -44,34 +40,11 @@ namespace TextBlob_Search
         /// paragraphs so that we can locate the section we are searching for.
         /// </summary>
         /// <param name="documentToSearch">Document we are searching to find a given section of text</param>
-        private static List<string> ParseDocument(string documentToSearch)
+        private static IEnumerable<string> ParseDocument(string documentToSearch)
         {
             // TODO: split the document into paragraphs that can be broken down and compared to our section that we are searching for
-            var documentPartsList = new List<string>();
             var partsArray = documentToSearch.Split(' ');
-            documentPartsList.Add(partsArray[0]);
-            return documentPartsList;
-        }
-
-        /// <summary>
-        /// Method that will divide each string into 4 char length clusters to be more easily compared
-        /// to each other, attempting to take into account typos in random locations.
-        /// </summary>
-        /// <param name="input">User input string that we will be searching the document for</param>
-        /// <param name="documentSection">Section of our Document to compare against the inputString</param>
-        /// <returns>Int value indicating the difference in string lengths</returns>
-        private static int SplitStrings_Char(string input, string documentSection)
-        {
-            var lengthDifference = (documentSection.Length - input.Length);
-            for (int i = 0; i < input.Length; i++)
-            {
-                var subStringCompare = input.Substring(i, 4);
-                var subStringSearch = _documentParts[0].Substring(i, 4);
-                SubCompareCharList.Add(subStringCompare);
-                SubSearchCharList.Add(subStringSearch);
-            }
-            
-            return lengthDifference;
+            return partsArray.ToList();
         }
 
         /// <summary>
@@ -81,7 +54,7 @@ namespace TextBlob_Search
         /// <param name="input">User input string that we will be searching the document for</param>
         /// <param name="documentSection">Section of the Document to compare against the inputString</param>
         /// <returns>Word count difference between the two strings</returns>
-        private static int SplitStrings_Word(string input, string documentSection)
+        private static int SplitStrings(string input, string documentSection)
         {
             var subStringCompare = input.Split(' ');
             var subStringSearch = documentSection.Split(new [] {' ', '.'});
@@ -94,6 +67,12 @@ namespace TextBlob_Search
             
             var lengthDifference = (subStringSearch.Length - subStringCompare.Length);
             return lengthDifference;
+        }
+
+        private static int CompareStringsForMatch()
+        {
+
+            return 0;
         }
     }
 }
