@@ -20,12 +20,21 @@ namespace TextBlob_Search
             DisplayResults(searchRoutine.ResultDictionary);
         }
 
+        /// <summary>
+        /// Method that will read in all text from a document that we will be searching over
+        /// </summary>
+        /// <param name="filePath">Path to the document file</param>
+        /// <returns></returns>
         private static string ReadDocumentFromFile(string filePath)
         {
             return File.ReadAllText(filePath);
         }
 
-        private static void DisplayResults(Dictionary<int, int> results)
+        /// <summary>
+        /// Method to display the results of the section comparison
+        /// </summary>
+        /// <param name="results">actual result values from the comparison</param>
+        private static void DisplayResults(Dictionary<int, float> results)
         {
             foreach (var result in results)
             {

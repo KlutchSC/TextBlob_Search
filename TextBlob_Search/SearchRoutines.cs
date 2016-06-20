@@ -11,7 +11,7 @@ namespace TextBlob_Search
         private static readonly List<string> SubCompareWordList = new List<string>();
 
         // Dictionary so that we can store the index of the section checked and the percentage value that it resembles the search string
-        public Dictionary<int, int> ResultDictionary = new Dictionary<int, int>();
+        public Dictionary<int, float> ResultDictionary = new Dictionary<int, float>();
 
         /// <summary>
         /// Default Constructor
@@ -69,9 +69,14 @@ namespace TextBlob_Search
             return lengthDifference;
         }
 
-        private static int CompareStringsForMatch()
+        /// <summary>
+        /// Using each section of the Document
+        /// </summary>
+        /// <returns>Percentage of how close the match between document section and the searched for string</returns>
+        private static float CompareStringsForMatch()
         {
-
+            // TODO: create algorithm to compare the sections of the document
+            // not only does it need to be able to find typos, but also account for differing lengths of the search string and document
             return 0;
         }
     }
