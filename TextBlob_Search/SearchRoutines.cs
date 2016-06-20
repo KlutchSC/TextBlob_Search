@@ -8,11 +8,17 @@ namespace TextBlob_Search
         // Lists for the string we are searching for within the document
         private static readonly List<string> SubSearchCharList = new List<string>();
         private static readonly List<string> SubSearchWordList = new List<string>();
+
         // Lists for the document so that we can compare with the string to search
         private static readonly List<string> SubCompareCharList = new List<string>(); 
         private static readonly List<string> SubCompareWordList = new List<string>();
+
         // List containing sections (paragraphs) of our original document to be 
         private static List<string> _documentParts = new List<string>();
+
+        // Dictionary so that we can store the percentage value of how close the section resembles the search string
+        public Dictionary<int, int> ResultDictionary = new Dictionary<int, int>();
+
         // Values for char/word difference after String.Split
         public int DifferenceInCharCount;
         public int DifferenceInWordCount;
@@ -31,7 +37,6 @@ namespace TextBlob_Search
                 DifferenceInCharCount = SplitStrings_Char(stringToSearchFor, section);
                 DifferenceInWordCount = SplitStrings_Word(stringToSearchFor, section);
             }
-            
         }
 
         /// <summary>
@@ -41,16 +46,16 @@ namespace TextBlob_Search
         /// <param name="documentToSearch">Document we are searching to find a given section of text</param>
         private static List<string> ParseDocument(string documentToSearch)
         {
+            // TODO: split the document into paragraphs that can be broken down and compared to our section that we are searching for
             var documentPartsList = new List<string>();
             var partsArray = documentToSearch.Split(' ');
             documentPartsList.Add(partsArray[0]);
-            //TODO: split the document into paragraphs that can be broken down and compared to our section that we are searching for
             return documentPartsList;
         }
 
         /// <summary>
         /// Method that will divide each string into 4 char length clusters to be more easily compared
-        /// to each other, taking into account typos in random locations.
+        /// to each other, attempting to take into account typos in random locations.
         /// </summary>
         /// <param name="input">User input string that we will be searching the document for</param>
         /// <param name="documentSection">Section of our Document to compare against the inputString</param>
