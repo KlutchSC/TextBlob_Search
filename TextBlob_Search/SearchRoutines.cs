@@ -24,14 +24,13 @@ namespace TextBlob_Search
 
             foreach (var section in documentParts)
             {
-                // first find the difference in word count between the section of the document and string to search for
-                var DifferenceInWordCount = SplitStrings(stringToSearchFor, section);
+                var wordCountDifference = SplitStrings(stringToSearchFor, section);
 
                 // determine the match percentage
-                var PercentageMatch = CompareStringsForMatch();
+                var percentageMatch = CompareStringsForMatch(section);
 
                 // finally add the result to our ResultDictionary
-                ResultDictionary.Add(DifferenceInWordCount, PercentageMatch);
+                ResultDictionary.Add(wordCountDifference, percentageMatch);
             }
         }
 
@@ -73,10 +72,11 @@ namespace TextBlob_Search
         /// Using each section of the Document
         /// </summary>
         /// <returns>Percentage of how close the match between document section and the searched for string</returns>
-        private static float CompareStringsForMatch()
+        private static float CompareStringsForMatch(string documentSection)
         {
             // TODO: create algorithm to compare the sections of the document
             // not only does it need to be able to find typos, but also account for differing lengths of the search string and document
+
             return 0;
         }
     }
